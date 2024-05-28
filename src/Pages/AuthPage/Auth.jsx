@@ -1,8 +1,17 @@
 import { Box, Button, Container, Flex, Image, Text, VStack } from '@chakra-ui/react'
 import React from 'react'
 import AuthForm from '../../Components/AuthForm/AuthForm'
+import useAuthStore from '../../Store/authStore';
+import { Navigate } from 'react-router-dom';
 
 const Auth = () => {
+    const { user } = useAuthStore();
+
+    // If user is already authenticated, redirect to home
+    if (user) {
+        return <Navigate to="/" />;
+    }
+
     return (
         <>
             <Flex minH="100vh" justifyContent="center" alignItems="center" px={4} overflow="hidden">

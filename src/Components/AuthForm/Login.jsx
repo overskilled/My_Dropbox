@@ -25,7 +25,8 @@ const Login = () => {
                     </InputRightElement>
                 </InputGroup>
             </FormControl>
-            <Button w={"full"}>Login</Button>
+            <Button w={"full"}
+            colorScheme='blue'>Login</Button>
         </>
     )
 }
