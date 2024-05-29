@@ -1,8 +1,11 @@
-import { Box, Flex, Spacer, Tooltip } from '@chakra-ui/react'
+import { Box, Button, Flex, Spacer, Tooltip } from '@chakra-ui/react'
 import React from 'react'
 import { BiHome, BiHomeCircle, BiLogOut } from 'react-icons/bi'
+import useLogOut from '../../Hooks/useLogOut'
 
 const Sidebar = () => {
+    const { loading, logout, error } = useLogOut()
+
     return (
         <Box
             height={"100vh"}
@@ -18,7 +21,7 @@ const Sidebar = () => {
                     <Tooltip
                         hasArrow
                         label={"home"}
-                        ml={2}  
+                        ml={2}
                         placement='right'
                         openDelay={300}
                     >
@@ -36,6 +39,7 @@ const Sidebar = () => {
                     </Tooltip>
                 </Flex>
                 <Flex direction={"column"} cursor={"pointer"} gap={5} justifyContent={"center"}
+                    onClick={logout}
                     alignItems={"center"}>
                     <Tooltip
                         hasArrow
@@ -44,17 +48,16 @@ const Sidebar = () => {
                         ml={2}
                         openDelay={300}
                     >
-                        <Flex
-                            alignItems={"center"}
-                            gap={4}
-                            _hover={{ bg: "whiteAlpha.400" }}
-                            borderRadius={6}
-                            p={2}
-                            mt={'auto'}
-                            w={10}
-                        >
+                        <>
                             <BiLogOut size={25} />
-                        </Flex>
+                            <Button display={{ base: 'none', md: "block" }}
+                                variant={"ghost"}
+                                _hover={{ bg: "transparent" }}
+                                isLoading={loading}
+                            >
+                                Logout
+                            </Button>
+                        </>
                     </Tooltip>
                 </Flex>
             </Flex>

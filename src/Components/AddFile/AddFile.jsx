@@ -1,8 +1,13 @@
-import { Box, Button, Flex, Text } from '@chakra-ui/react'
-import React from 'react'
-import { BiPlus } from 'react-icons/bi'
+import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
+import React, { useRef } from 'react';
+import { BiPlus } from 'react-icons/bi';
+import useSaveFile from '../../Hooks/useSaveFile';
 
 const AddFile = () => {
+    const fileRef = useRef(null);
+    const { handleUploadFile, selectedFile, setSelectedFile, loading } = useSaveFile();
+
+    console.log(selectedFile);
     return (
         <>
             <Button
@@ -14,16 +19,17 @@ const AddFile = () => {
                 bgColor={"white"}
                 color={"black"}
                 _hover={{ bgColor: "black", color: "white", }}
-                // onClick={() => fileRef.current.click()}
+                onClick={() => fileRef.current.click()}
+                isLoading={loading}
             >
                 <Flex direction={"column"} gap={3} alignItems={"left"}>
                     <BiPlus size={"30px"} />
-                    <Text>upload file</Text>
+                    <Text>Upload File</Text>
                 </Flex>
             </Button>
-            {/* <Input type='file' hidden ref={fileRef} onChange={handleImageChange} /> */}
+            <Input type='file' hidden ref={fileRef} onChange={handleUploadFile} />
         </>
-    )
-}
+    );
+};
 
-export default AddFile
+export default AddFile;
