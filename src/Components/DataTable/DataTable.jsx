@@ -70,7 +70,7 @@ const DataTable = () => {
                         {files && files.length > 0 ? (
                             files.map((file) => (
                                 <Tr key={file.id}>
-                                    <Td>{file.name}</Td>
+                                    <Td><Link href={file.fileURL} isExternal>{file.name}</Link></Td>
                                     <Td>{(file.size / (1024 * 1024)).toFixed(2)} MB</Td>
                                     <Td>{file.type}</Td>
                                     <Td>{new Date(file.lastModification).toLocaleString('en-US', {

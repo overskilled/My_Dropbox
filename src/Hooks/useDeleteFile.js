@@ -32,11 +32,12 @@ const useDeleteFile = () => {
                 showToast("Success", "File deleted successfully. Refresh!", "success");
             } else {
                 showToast("Error", "No such document!", "error");
-            }
+            } 
         } catch (error) {
             showToast("Error", error.message, "error");
         } finally {
             setLoading(false);
+            window.location.reload()
         }
     }
 

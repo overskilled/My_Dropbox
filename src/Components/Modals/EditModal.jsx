@@ -18,8 +18,8 @@ const EditModal = ({ onClose, isOpen, file }) => {
     const [name, setName] = useState(file.name)
     const { loading, editFile } = useEditFile()
 
-    const handleUpdateFile = () => {
-        editFile(name, file);
+    const handleUpdateFile = async () => {
+        await editFile(name, file);
         window.location.reload();
     };
 
