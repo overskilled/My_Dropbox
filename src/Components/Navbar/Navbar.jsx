@@ -1,17 +1,24 @@
 import { SunIcon } from '@chakra-ui/icons'
-import { Avatar, Box, Button, Center, Flex, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Spacer, Stack } from '@chakra-ui/react'
+import { Avatar, Box, Button, Center, Flex, Image, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Spacer, Stack } from '@chakra-ui/react'
 import React from 'react'
 import SearchBar from '../SearchBar/SearchBar'
-import { BiLogOut } from 'react-icons/bi'
+import { BiLogOut, BiSun } from 'react-icons/bi'
 import { GiBigGear } from 'react-icons/gi'
+import useAuthStore from '../../Store/authStore'
+import useLogOut from '../../Hooks/useLogOut'
 
 const Navbar = () => {
+    const user = JSON.parse(localStorage.getItem("user-info"))
+    const { loading, logout, error } = useLogOut()    
+
     return (
         <>
             <Box px={4} bgColor={"#2d2d2d"}>
                 <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
 
-                    <Box marginLeft={5}>Logo</Box>
+                    <Box marginLeft={5}>
+                        <Image src='/nav-logo.png' alt='Navbar logo' />
+                    </Box>
 
                     <Box marginLeft={10}>
                         <SearchBar />
@@ -20,7 +27,7 @@ const Navbar = () => {
                     <Flex alignItems={'center'}>
                         <Stack direction={'row'} spacing={7}>
                             <Button >
-                                <GiBigGear />
+                                <BiSun />
                             </Button>
 
                             <Menu>
@@ -45,12 +52,11 @@ const Navbar = () => {
                                     </Center>
                                     <br />
                                     <Center>
-                                        <p>Username</p>
+                                        <p>{user?.username}</p>
                                     </Center>
                                     <br />
                                     <MenuDivider />
-                                    <MenuItem><GiBigGear style={{ marginRight: "5px" }} />  Account Settings</MenuItem>
-                                    <MenuItem><BiLogOut style={{ marginRight: "5px" }} /> Logout</MenuItem>
+                                    <MenuItem onClick={logout}><BiLogOut style={{ marginRight: "5px" }} /> Logout</MenuItem>
                                 </MenuList>
                             </Menu>
                         </Stack>

@@ -7,7 +7,6 @@ const AddFile = () => {
     const fileRef = useRef(null);
     const { handleUploadFile, selectedFile, setSelectedFile, loading } = useSaveFile();
 
-    console.log(selectedFile);
     return (
         <>
             <Button

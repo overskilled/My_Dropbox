@@ -4,6 +4,8 @@ import useShowToast from './useShowToast';
 import { firestore, storage } from '../Firebase/Config';
 import useAuthStore from '../Store/authStore';
 import { arrayUnion, collection, doc, runTransaction, setDoc, updateDoc } from 'firebase/firestore';
+import useFileStore from '../Store/fileStore';
+import { storageFolder } from '../Components/utils/storageFolder';
 
 const useSaveFile = () => {
     const [loading, setLoading] = useState(false);
@@ -11,6 +13,7 @@ const useSaveFile = () => {
     const showToast = useShowToast();
     const maxFileSizeinBytes = 20 * 1024 * 1024; // 20MB
     const { user } = useAuthStore()
+    const { createFile } = useFileStore()
 
     const handleUploadFile = async (e) => {
         const file = e.target.files[0]; // Corrected to 'files' instead of 'file'
@@ -25,31 +28,8 @@ const useSaveFile = () => {
 
             setLoading(true);
 
-            let folder;
-            const fileType = file.type;
-
-            // Categorize file types into folders
-            if (fileType.startsWith('image/')) {
-                folder = 'Images/';
-            } else if (fileType === 'application/pdf') {
-                folder = 'PDF/';
-            } else if (fileType.startsWith('video/')) {
-                folder = 'Videos/';
-            } else if (fileType.startsWith('audio/')) {
-                folder = 'Audio/';
-            } else if (fileType.startsWith('text/')) {
-                folder = 'Text/';
-            } else if (fileType === 'application/msword' || fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                folder = 'Documents/Word/';
-            } else if (fileType === 'application/vnd.ms-excel' || fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-                folder = 'Documents/Excel/';
-            } else if (fileType === 'application/vnd.ms-powerpoint' || fileType === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
-                folder = 'Documents/PowerPoint/';
-            } else if (fileType === 'application/zip' || fileType === 'application/x-rar-compressed') {
-                folder = 'Archives/';
-            } else {
-                folder = 'Others/';
-            }
+            const fileType = file.type
+            let folder = storageFolder(fileType)
 
             const storageRef = ref(storage, `${folder}${file.name}`);
 
@@ -62,7 +42,8 @@ const useSaveFile = () => {
                     fileURL: downloadURL,
                     size: file.size,
                     type: fileType,
-                    lastModification: file.lastModified
+                    lastModification: file.lastModified,
+                    name: file.name
                 }
 
                 // Create a unique ID for the new file document
@@ -76,7 +57,7 @@ const useSaveFile = () => {
                 await updateDoc(userDocRef, {
                     files: arrayUnion(newFileRef.id)
                 });
-
+                createFile(fileData)
                 console.log("File Data:", fileData);
 
 

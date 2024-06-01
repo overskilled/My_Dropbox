@@ -7,7 +7,7 @@ import useShowToast from './useShowToast'
 const useLogOut = () => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
-    const { setUser } = useAuthStore()
+    const { setUser, logoutUser } = useAuthStore()
     const showToast = useShowToast()
 
     const logout = async () => {
@@ -15,7 +15,8 @@ const useLogOut = () => {
         setError("")
         try {
             await signOut(auth)
-            localStorage.removeItem("user-Info")
+            localStorage.removeItem("user-info")
+            logoutUser()
             setUser("")
             showToast("Success", "logged out successful", "success")
         } catch (error) {

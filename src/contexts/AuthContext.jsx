@@ -17,10 +17,7 @@ export function AuthProvider({ children }) {
         const unsubscribe = onAuthStateChanged(auth, user => {
             setUser(user)
             setLoading(false)
-            console.log(user)
-            console.log(localStorage.getItem("user-info"))
         })
-
         return unsubscribe
     }, [])
 

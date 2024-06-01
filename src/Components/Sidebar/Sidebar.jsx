@@ -54,6 +54,7 @@ const Sidebar = () => {
                                 variant={"ghost"}
                                 _hover={{ bg: "transparent" }}
                                 isLoading={loading}
+                                hidden
                             >
                                 Logout
                             </Button>
