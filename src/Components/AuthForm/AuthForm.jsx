@@ -23,11 +23,11 @@ const AuthForm = () => {
                             </Box>
                         </Flex>
                     </Box>
-                    <Text fontSize={15} textAlign={"center"}>Or {isLogin ? "login" : "signup"} with</Text>
+                    {/* <Text fontSize={15} textAlign={"center"}>Or {isLogin ? "login" : "signup"} with</Text>
                     <Flex gap={10} justify={"center"}>
                         <Button bgColor={"#000"} borderRadius={"10px"}>Google</Button>
                         <Button bgColor={"#000"} borderRadius={"10px"}>Apple</Button>
-                    </Flex>
+                    </Flex> */}
                 </VStack>
             </Box>
         </>

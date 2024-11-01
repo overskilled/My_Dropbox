@@ -1,47 +1,55 @@
-import React, { useState } from 'react'
-import useShowToast from './useShowToast'
-import { deleteObject, ref } from 'firebase/storage'
-import { firestore, storage } from '../Firebase/Config'
-import { storageFolder } from '../Components/utils/storageFolder'
-import { deleteDoc, doc, getDoc } from 'firebase/firestore'
+import React, { useState } from 'react';
+import useShowToast from './useShowToast';
+import { deleteObject, ref } from 'firebase/storage';
+import { firestore, storage } from '../Firebase/Config';
+import { storageFolder } from '../Components/utils/storageFolder';
+import { deleteDoc, doc, getDoc } from 'firebase/firestore';
+import useFileStore from '../Store/fileStore';
 
 const useDeleteFile = () => {
-    const [loading, setLoading] = useState(false)
-    const [file, setFile] = useState()
-    const showToast = useShowToast()
+    const [loading, setLoading] = useState(false);
+    const showToast = useShowToast();
+    const deleteFileFromStore = useFileStore((state) => state.deleteFile); // Correct function reference
 
     const deleteFile = async (fileID) => {
         setLoading(true);
 
         try {
-            // Fetch the file data based on fileID
-            const fileDocRef = doc(firestore, "files", fileID)
+            // Fetch the file document from Firestore
+            const fileDocRef = doc(firestore, "files", fileID);
             const docSnap = await getDoc(fileDocRef);
 
-            if (docSnap.exists()) {
-                const fileData = docSnap.data();
-                setFile(fileData); // Set the file data
-                const fileType = fileData.type;
-                const folder = storageFolder(fileType);
-                const storageRef = ref(storage, `${folder}/${fileData.name}`);
-                
-                // Delete the file
-                await deleteObject(storageRef);
-                await deleteDoc(doc(firestore, "files", fileID));
-                
-                showToast("Success", "File deleted successfully. Refresh!", "success");
-            } else {
-                showToast("Error", "No such document!", "error");
-            } 
+            // Check if document exists
+            if (!docSnap.exists()) {
+                showToast("Error", "File document not found!", "error");
+                return;
+            }
+
+            const fileData = docSnap.data();
+
+            // Get the folder based on file type
+            const fileType = fileData.type;
+            const folder = storageFolder(fileType);
+            const storageRef = ref(storage, `${folder}/${fileData.name}`);
+
+            // Attempt to delete file from storage
+            await deleteObject(storageRef);
+
+            // Delete file document from Firestore
+            await deleteDoc(fileDocRef);
+
+            // Update Zustand state to remove file from the list
+            deleteFileFromStore(fileID); // Use correct function from Zustand
+            
+            showToast("Success", "File deleted successfully. Please reload.", "success");
         } catch (error) {
-            showToast("Error", error.message, "error");
+            showToast("Error", `Deletion failed: ${error.message}`, "error");
         } finally {
             setLoading(false);
-            window.location.reload()
         }
-    }
+    };
 
-    return { loading, deleteFile }
-}
+    return { loading, deleteFile };
+};
 
 export default useDeleteFile;
